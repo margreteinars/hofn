@@ -7,126 +7,210 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 <style>
-  :root{
-    --charcoal:#16181d; --gold:#c9a24b; --golddark:#b8860b; --soft:#f4e9cc;
-    --text:#2b2b2b; --muted:#8a8a8a; --line:#ececec; --bg:#e9e9e6; --card:#ffffff;
-  }
+  :root{--charcoal:#16181d;--gold:#c9a24b;--golddark:#b8860b;--soft:#f4e9cc;
+    --text:#2b2b2b;--muted:#8a8a8a;--line:#ececec;--bg:#e9e9e6;--card:#fff;}
   *{box-sizing:border-box;}
-  body{margin:0; background:var(--bg); font-family:'Work Sans',Helvetica,Arial,sans-serif; color:var(--text); -webkit-font-smoothing:antialiased; line-height:1.6;}
-  .wrap{max-width:760px; margin:28px auto; background:var(--card); border-radius:14px; overflow:hidden; box-shadow:0 6px 24px rgba(0,0,0,0.08);}
-  .header{padding:44px 44px 30px; border-bottom:1px solid var(--line);}
-  .brand{color:var(--gold); font-size:12px; letter-spacing:4px; text-transform:uppercase; font-weight:700;}
-  .title{color:var(--charcoal); font-size:38px; font-weight:600; letter-spacing:-0.5px; margin:12px 0 0;}
-  .sub{color:var(--muted); font-size:14px; margin-top:8px; letter-spacing:.5px;}
-  .accent{height:3px; width:54px; background:var(--gold); margin-top:20px; border-radius:2px;}
-  .sec{padding:30px 44px 4px;}
-  .sec h2{font-size:13px; letter-spacing:2px; text-transform:uppercase; color:var(--charcoal); font-weight:600; border-bottom:2px solid var(--soft); padding-bottom:8px; margin:0 0 14px;}
-  .row{display:flex; gap:14px; padding:7px 0; border-bottom:1px solid #f4f4f2;}
+  body{margin:0;background:var(--bg);font-family:'Work Sans',Helvetica,Arial,sans-serif;color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:820px;margin:24px auto;background:var(--card);border-radius:16px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.10);}
+  /* Hero */
+  .hero{background:linear-gradient(155deg,#101216 0%,#1d2027 55%,#2a2620 100%);padding:52px 46px 42px;position:relative;}
+  .hero::after{content:"";position:absolute;left:46px;bottom:30px;width:56px;height:3px;background:var(--gold);border-radius:2px;}
+  .brand{color:var(--gold);font-size:12px;letter-spacing:5px;text-transform:uppercase;font-weight:700;}
+  .hero h1{color:#fff;font-size:46px;font-weight:600;letter-spacing:-1px;margin:14px 0 0;}
+  .hero .tag{color:#b9bac0;font-size:15px;margin-top:10px;max-width:520px;}
+  .hero .meta{color:var(--gold);font-size:12.5px;letter-spacing:1.5px;text-transform:uppercase;margin-top:22px;}
+  .sec{padding:32px 46px 6px;}
+  .sec h2{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--charcoal);font-weight:600;border-bottom:2px solid var(--soft);padding-bottom:8px;margin:0 0 16px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+  .contact{border:1px solid var(--line);border-radius:12px;padding:14px 16px;}
+  .contact .nm{font-size:15px;font-weight:600;color:var(--charcoal);}
+  .contact .ro{font-size:11.5px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin:2px 0 8px;}
+  .contact a{font-size:14px;color:var(--golddark);text-decoration:none;font-weight:600;}
+  .contact a:hover{text-decoration:underline;}
+  .callout{background:var(--soft);border-left:4px solid var(--gold);border-radius:0 12px 12px 0;padding:6px 20px;margin:0 46px;}
+  .row{display:flex;gap:14px;padding:9px 0;border-bottom:1px solid #e6d9b8;}
   .row:last-child{border-bottom:none;}
-  .row .k{width:150px; flex:none; color:var(--muted); font-size:14px;}
+  .row .k{width:170px;flex:none;color:#7a6636;font-size:13.5px;}
   .row .v{font-size:14px;}
-  .v strong{color:var(--charcoal);}
-  a{color:var(--golddark); text-decoration:none; font-weight:500;}
-  a:hover{text-decoration:underline;}
-  .cards{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:2px;}
-  .cardbox{border:1px solid var(--line); border-radius:10px; padding:14px 16px;}
-  .cardbox h3{margin:0 0 4px; font-size:15px; color:var(--charcoal); font-weight:600;}
-  .cardbox p{margin:0; font-size:13px; color:var(--text);}
-  .callout{background:var(--soft); border-left:4px solid var(--gold); border-radius:0 10px 10px 0; padding:14px 18px; margin:0 44px;}
-  .callout .k{color:#7a6636;}
-  .note{padding:20px 44px 4px; font-size:12.5px; color:var(--muted);}
-  .footer{background:var(--charcoal); padding:28px 44px; margin-top:26px;}
-  .footer .n{color:#fff; font-size:15px; font-weight:600;}
-  .footer .r{color:var(--gold); font-size:12px; letter-spacing:1px; text-transform:uppercase; margin-top:3px;}
-  .footer .c{color:var(--muted); font-size:13px; margin-top:10px;}
-  @media(max-width:560px){ .cards{grid-template-columns:1fr;} .row{flex-direction:column; gap:2px;} .row .k{width:auto;} .header,.sec,.callout,.note,.footer{padding-left:24px; padding-right:24px;} .callout{margin-left:24px; margin-right:24px;} }
+  .v strong{color:var(--charcoal);} a{color:var(--golddark);}
+  #map{height:460px;width:100%;border-radius:12px;border:1px solid var(--line);margin-top:2px;}
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin:12px 2px 0;font-size:12.5px;color:var(--muted);}
+  .dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:middle;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.15);}
+  .place{border:1px solid var(--line);border-radius:12px;padding:14px 16px;}
+  .place h3{margin:0 0 3px;font-size:15px;color:var(--charcoal);font-weight:600;}
+  .place p{margin:0 0 8px;font-size:13px;}
+  .place .lnk{font-size:12.5px;font-weight:600;color:var(--golddark);text-decoration:none;}
+  .place .lnk:hover{text-decoration:underline;}
+  /* schedule */
+  table.cal{border-collapse:collapse;width:100%;margin-top:4px;font-size:12.5px;}
+  table.cal td{border:1px solid #e6e4de;padding:8px 9px;vertical-align:top;}
+  table.cal .lab{background:#f7f6f3;width:120px;font-weight:600;color:var(--charcoal);}
+  table.cal .lab span{display:block;font-weight:400;color:var(--muted);font-size:11.5px;}
+  table.cal .dh{background:#efece6;font-weight:600;color:var(--charcoal);text-align:center;font-size:11.5px;}
+  table.cal .shoot{background:var(--soft);border-top:2px solid var(--gold);}
+  .note{padding:18px 46px 4px;font-size:12.5px;color:var(--muted);}
+  .footer{background:var(--charcoal);padding:30px 46px;margin-top:28px;}
+  .footer .n{color:#fff;font-size:15px;font-weight:600;}
+  .footer .r{color:var(--gold);font-size:12px;letter-spacing:1px;text-transform:uppercase;margin-top:3px;}
+  .footer .c{color:var(--muted);font-size:13px;margin-top:10px;}
+  @media(max-width:620px){.grid2,.grid3{grid-template-columns:1fr;}.hero h1{font-size:34px;}
+    .hero,.sec,.note,.footer{padding-left:22px;padding-right:22px;}.callout{margin:0 22px;}
+    .row{flex-direction:column;gap:2px;}.row .k{width:auto;}}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <div class="header">
+  <!-- HERO -->
+  <div class="hero">
     <div class="brand">STILL VIVID</div>
-    <h1 class="title">Welcome to Höfn</h1>
-    <div class="sub">Your guide to Höfn í Hornafirði &nbsp;·&nbsp; OLAS · July 2026</div>
-    <div class="accent"></div>
+    <h1>Welcome to Höfn</h1>
+    <div class="meta">OLAS · July 2026</div>
   </div>
 
+  <!-- KEY CONTACTS -->
   <div class="sec">
-    <p style="margin-top:0; font-size:15.5px;">Welcome to Höfn, the langoustine capital of Iceland, tucked between the sea and the Vatnajökull glacier. Here are the essentials for your stay. Save this page — everything you need is in one place.</p>
+    <h2>Key contacts</h2>
+    <div class="grid2">
+      <div class="contact"><div class="nm">Margrét Einarsdóttir</div><div class="ro">Coordinator · STILL VIVID</div><a href="tel:+3546159920">+354 615 9920</a></div>
+      <div class="contact"><div class="nm">Anton Máni Svansson</div><div class="ro">Producer · STILL VIVID</div><a href="tel:+3546150005">+354 615 0005</a></div>
+      <div class="contact"><div class="nm">Katrin Pors</div><div class="ro">Producer · Snowglobe Film</div><a href="tel:+4525327661">+45 25 32 76 61</a></div>
+      <div class="contact"><div class="nm">Hilmar Guðjónsson</div><div class="ro">Production</div><a href="tel:+3548453527">+354 845 3527</a></div>
+    </div>
   </div>
 
   <!-- EMERGENCY -->
-  <h2 style="margin:8px 44px 12px; font-size:13px; letter-spacing:2px; text-transform:uppercase; color:#16181d; font-weight:600;">Emergency &amp; key numbers</h2>
+  <h2 style="margin:26px 46px 12px;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#16181d;font-weight:600;">Emergency &amp; essential numbers</h2>
   <div class="callout">
-    <div class="row" style="border-bottom:1px solid #e6d9b8;"><div class="k">Emergency (all)</div><div class="v"><strong><a href="tel:112">112</a></strong> &nbsp;— police · ambulance · fire · rescue</div></div>
-    <div class="row" style="border-bottom:1px solid #e6d9b8;"><div class="k">Health centre</div><div class="v">HSU Höfn, Víkurbraut 31 · weekdays 08:00–15:00 · <a href="tel:1700">1700</a> &nbsp;(dental <a href="tel:+3544782033">478 2033</a>)</div></div>
-    <div class="row" style="border-bottom:1px solid #e6d9b8;"><div class="k">Pharmacy</div><div class="v">Lyfja, Litlabrú 1 · <a href="tel:+3544781224">478 1224</a></div></div>
-    <div class="row" style="border-bottom:1px solid #e6d9b8;"><div class="k">Police (non-emergency)</div><div class="v"><a href="tel:+3544441000">444 1000</a></div></div>
-    <div class="row"><div class="k">Production (Margrét)</div><div class="v"><a href="tel:+3546159920">+354 615 9920</a></div></div>
+    <div class="row"><div class="k">Emergency (all)</div><div class="v"><strong><a href="tel:112">112</a></strong> — police · ambulance · fire · rescue</div></div>
+    <div class="row"><div class="k">Health centre</div><div class="v">HSU Höfn, Víkurbraut 31 · weekdays 08–15 · <a href="tel:1700">1700</a></div></div>
+    <div class="row"><div class="k">Pharmacy</div><div class="v">Lyfja, Litlabrú 1 · <a href="tel:+3544781224">478 1224</a></div></div>
+    <div class="row"><div class="k">Police (non-emergency)</div><div class="v"><a href="tel:+3544441000">444 1000</a></div></div>
+    <div class="row"><div class="k">Swimming pool</div><div class="v"><a href="tel:+3544708477">470 8477</a></div></div>
   </div>
 
-  <!-- POOL -->
+  <!-- MAP -->
   <div class="sec">
-    <h2>Swimming pool</h2>
-    <div class="row"><div class="k">Sundlaug Hafnar</div><div class="v">Víkurbraut, Höfn · <a href="https://www.google.com/maps/dir/?api=1&destination=Sundlaug+Hafnar,+H%C3%B6fn,+Iceland">Directions</a></div></div>
-    <div class="row"><div class="k">Hours</div><div class="v">Weekdays <strong>06:45–21:00</strong> · Weekends <strong>10:00–19:00</strong></div></div>
-    <div class="row"><div class="k">Facilities</div><div class="v">25 m outdoor pool (29°C), hot tubs, steam bath, cold/ice bath, kids' pool</div></div>
-    <div class="row"><div class="k">Phone</div><div class="v"><a href="tel:+3544708477">470 8477</a></div></div>
+    <h2>Interactive map</h2>
+    <div id="map"></div>
+    <div class="legend">
+      <span><span class="dot" style="background:#c9a24b;"></span>Base &amp; production</span>
+      <span><span class="dot" style="background:#c0392b;"></span>Shoot location</span>
+      <span><span class="dot" style="background:#2d6cdf;"></span>Essentials</span>
+      <span><span class="dot" style="background:#16181d;"></span>Food &amp; drink</span>
+      <span><span class="dot" style="background:#2e8b57;"></span>Sights</span>
+    </div>
+    <p style="font-size:12.5px;color:var(--muted);margin-top:10px;">Tap a pin for details and directions. Use the layer button (top-right) to switch between map and satellite. Zoom out to see Stokksnes, Jökulsárlón &amp; Djúpivogur.</p>
   </div>
 
-  <!-- GROCERIES -->
+  <!-- PRODUCTION / BASE -->
   <div class="sec">
-    <h2>Groceries &amp; essentials</h2>
-    <div class="row"><div class="k">Nettó (supermarket)</div><div class="v">Litlabrú 1 · Mon–Fri <strong>09:00–19:00</strong>, Sat–Sun <strong>10:00–19:00</strong> · bakery, bank &amp; souvenirs in the same centre · <a href="https://www.google.com/maps/dir/?api=1&destination=Nett%C3%B3,+Litlabr%C3%BA+1,+H%C3%B6fn,+Iceland">Directions</a></div></div>
-    <div class="row"><div class="k">Vínbúðin (alcohol)</div><div class="v">State liquor store, Litlabrú 1 · limited hours — check before you go (closed Sundays)</div></div>
-    <div class="row"><div class="k">Fuel</div><div class="v">N1 and Olís stations in town · pumps open 24h with card</div></div>
+    <h2>Production base &amp; shoot days</h2>
+    <div class="row" style="border-color:#f0f0ee;"><div class="k" style="color:var(--muted);">Base</div><div class="v"><strong>Álaleira 5, Höfn</strong> — production office / unit base · <a href="https://www.google.com/maps/dir/?api=1&destination=%C3%81laleira+5,+780+H%C3%B6fn,+Iceland">Directions</a></div></div>
+    <div class="row" style="border-color:#f0f0ee;"><div class="k" style="color:var(--muted);">Unit move</div><div class="v">Raft days shoot at <strong>Djúpivogur</strong> — ~1 h drive north of Höfn</div></div>
+    <table class="cal">
+      <tr><td class="lab"></td><td class="dh">Mon 13</td><td class="dh">Tue 14</td><td class="dh">Wed 15</td><td class="dh">Thu 16</td><td class="dh">Fri 17</td><td class="dh">Sat 18</td><td class="dh">Sun 19</td></tr>
+      <tr><td class="lab">Working time<span>06:30–18:30</span></td><td></td><td></td><td></td><td></td><td class="shoot">Raft on shore goes into water (50 extras)</td><td></td><td></td></tr>
+      <tr><td class="lab"></td><td class="dh">Mon 20</td><td class="dh">Tue 21</td><td class="dh">Wed 22</td><td class="dh">Thu 23</td><td class="dh">Fri 24</td><td class="dh">Sat 25</td><td class="dh">Sun 26</td></tr>
+      <tr><td class="lab">Working time<span>14:00–02:00</span></td><td class="shoot">On the raft, Djúpivogur (1h drive)</td><td class="shoot">On the raft, Djúpivogur (1h drive)</td><td class="shoot">On the raft, Djúpivogur (no actors)</td><td class="shoot">Photographer arrives</td><td></td><td></td><td></td></tr>
+    </table>
+  </div>
+
+  <!-- ESSENTIALS -->
+  <div class="sec">
+    <h2>Swimming pool &amp; groceries</h2>
+    <div class="grid2">
+      <div class="place"><h3>Sundlaug Hafnar (pool)</h3><p>Víkurbraut · Weekdays 06:45–21:00, weekends 10:00–19:00. 25 m outdoor pool, hot tubs, steam &amp; ice bath.</p><a class="lnk" href="https://www.google.com/maps/dir/?api=1&destination=Sundlaug+Hafnar,+H%C3%B6fn,+Iceland">Directions ›</a></div>
+      <div class="place"><h3>Nettó (supermarket)</h3><p>Litlabrú 1 · Mon–Fri 09–19, Sat–Sun 10–19. Bakery, bank &amp; deli in the same centre.</p><a class="lnk" href="https://www.google.com/maps/dir/?api=1&destination=Nett%C3%B3,+Litlabr%C3%BA+1,+H%C3%B6fn,+Iceland">Directions ›</a></div>
+      <div class="place"><h3>Vínbúðin (alcohol)</h3><p>State liquor store, Litlabrú 1 · limited hours, closed Sundays — check before you go.</p><a class="lnk" href="https://www.google.com/maps/dir/?api=1&destination=V%C3%ADnb%C3%BA%C3%B0in,+H%C3%B6fn,+Iceland">Directions ›</a></div>
+      <div class="place"><h3>Fuel — N1</h3><p>N1 station in town. Pumps open 24 h with card.</p><a class="lnk" href="https://www.google.com/maps/dir/?api=1&destination=N1+H%C3%B6fn,+Iceland">Directions ›</a></div>
+    </div>
   </div>
 
   <!-- FOOD -->
   <div class="sec">
-    <h2>Restaurants &amp; cafés</h2>
-    <div class="cards">
-      <div class="cardbox"><h3>Pakkhús</h3><p>By the harbour in a 1932 house. Famous for local langoustine, lamb &amp; duck. Book ahead in summer.</p></div>
-      <div class="cardbox"><h3>Kaffi Hornið</h3><p>Central log-house restaurant since 1999. Seafood, lamb, pizza, veggie. <a href="https://kaffihornid.is/">kaffihornid.is</a></p></div>
-      <div class="cardbox"><h3>Ósinn</h3><p>Restaurant on the ground floor of Hótel Höfn. Fresh local produce &amp; fish.</p></div>
-      <div class="cardbox"><h3>Íshúsið Pizzeria</h3><p>Thin stone-baked pizzas by the harbour, in the old icehouse.</p></div>
-      <div class="cardbox"><h3>Hafnarbúðin</h3><p>Cheerful old-school diner — burgers, fast food with a local twist. Late hours.</p></div>
-      <div class="cardbox"><h3>Nettó deli</h3><p>Ready meals, bakery &amp; hot food if you want something quick and cheap.</p></div>
+    <h2>Where to eat</h2>
+    <div class="grid3">
+      <div class="place"><h3>Pakkhús</h3><p>Harbour, 1932 house. Local langoustine, lamb &amp; duck. Book ahead.</p><a class="lnk" href="https://www.google.com/maps/dir/?api=1&destination=Pakkh%C3%BAs,+H%C3%B6fn,+Iceland">Directions ›</a></div>
+      <div class="place"><h3>Kaffi Hornið</h3><p>Central log-house restaurant since 1999.</p><a class="lnk" href="https://kaffihornid.is/">kaffihornid.is ›</a></div>
+      <div class="place"><h3>Ósinn</h3><p>Restaurant at Hótel Höfn. Fresh local produce &amp; fish.</p><a class="lnk" href="https://www.google.com/maps/dir/?api=1&destination=H%C3%B3tel+H%C3%B6fn,+Iceland">Directions ›</a></div>
+      <div class="place"><h3>Íshúsið Pizzeria</h3><p>Thin stone-baked pizzas by the harbour.</p><a class="lnk" href="https://www.google.com/maps/dir/?api=1&destination=%C3%8Dsh%C3%BAsi%C3%B0+Pizzeria,+H%C3%B6fn,+Iceland">Directions ›</a></div>
+      <div class="place"><h3>Hafnarbúðin</h3><p>Old-school diner — burgers &amp; fast food, late hours.</p><a class="lnk" href="https://www.google.com/maps/dir/?api=1&destination=Hafnarb%C3%BA%C3%B0in,+H%C3%B6fn,+Iceland">Directions ›</a></div>
+      <div class="place"><h3>Nettó deli</h3><p>Bakery, hot food &amp; ready meals for something quick.</p><a class="lnk" href="https://www.google.com/maps/dir/?api=1&destination=Nett%C3%B3,+Litlabr%C3%BA+1,+H%C3%B6fn,+Iceland">Directions ›</a></div>
     </div>
-    <p style="font-size:12.5px; color:var(--muted); margin-top:12px;">Opening hours are seasonal — most are open for dinner in summer, but call ahead for large groups.</p>
+    <p style="font-size:12.5px;color:var(--muted);margin-top:12px;">Hours are seasonal — call ahead for large groups.</p>
   </div>
 
-  <!-- THINGS TO DO -->
+  <!-- SIGHTS -->
   <div class="sec">
-    <h2>On a day off — sights nearby</h2>
-    <div class="cards">
-      <div class="cardbox"><h3>Stokksnes &amp; Vestrahorn</h3><p>Dramatic black-sand beach &amp; mountain, ~15 min. Iconic photo spot; small entry fee at the Viking Café.</p></div>
-      <div class="cardbox"><h3>Jökulsárlón &amp; Diamond Beach</h3><p>Glacier lagoon with floating icebergs, ~1 hr west. Boat tours in summer.</p></div>
-      <div class="cardbox"><h3>Vatnajökull glacier</h3><p>Guided glacier hikes &amp; ice-cave tours from the region — book with an operator.</p></div>
-      <div class="cardbox"><h3>Gamlabúð</h3><p>Vatnajökull National Park visitor centre at the harbour — maps, exhibits, info.</p></div>
-      <div class="cardbox"><h3>Ósland</h3><p>Coastal nature spot by town — great for a walk &amp; birdlife (arctic terns, puffins in season).</p></div>
-      <div class="cardbox"><h3>Þórbergssetur</h3><p>Culture museum ~30 min west at Hali — plus a café/restaurant.</p></div>
+    <h2>On a day off</h2>
+    <div class="grid3">
+      <div class="place"><h3>Stokksnes &amp; Vestrahorn</h3><p>Black-sand beach &amp; peaks, ~15 min. Iconic photo spot; small fee at the Viking Café.</p><a class="lnk" href="https://www.google.com/maps/dir/?api=1&destination=Stokksnes,+Iceland">Directions ›</a></div>
+      <div class="place"><h3>Jökulsárlón</h3><p>Glacier lagoon &amp; Diamond Beach, ~1 h west. Iceberg boat tours in summer.</p><a class="lnk" href="https://www.google.com/maps/dir/?api=1&destination=J%C3%B6kuls%C3%A1rl%C3%B3n,+Iceland">Directions ›</a></div>
+      <div class="place"><h3>Vatnajökull glacier</h3><p>Guided glacier hikes &amp; ice caves — book with an operator.</p><a class="lnk" href="https://www.google.com/maps/dir/?api=1&destination=Vatnaj%C3%B6kull,+Iceland">Directions ›</a></div>
+      <div class="place"><h3>Gamlabúð</h3><p>Vatnajökull National Park visitor centre at the harbour.</p><a class="lnk" href="https://www.google.com/maps/dir/?api=1&destination=Gamlab%C3%BA%C3%B0,+H%C3%B6fn,+Iceland">Directions ›</a></div>
+      <div class="place"><h3>Ósland</h3><p>Coastal walk by town — birdlife, arctic terns &amp; puffins in season.</p><a class="lnk" href="https://www.google.com/maps/dir/?api=1&destination=%C3%93sland,+H%C3%B6fn,+Iceland">Directions ›</a></div>
+      <div class="place"><h3>Þórbergssetur</h3><p>Culture museum &amp; café ~30 min west at Hali.</p><a class="lnk" href="https://www.google.com/maps/dir/?api=1&destination=%C3%9E%C3%B3rbergssetur,+Iceland">Directions ›</a></div>
     </div>
   </div>
 
-  <!-- PRACTICAL -->
+  <!-- GOOD TO KNOW -->
   <div class="sec">
-    <h2>Good to know</h2>
-    <div class="row"><div class="k">Getting around</div><div class="v">Höfn is small &amp; walkable. Djúpivogur (raft days) is ~1 hr north; Reykjavík ~460 km / 6 hrs west.</div></div>
-    <div class="row"><div class="k">Weather</div><div class="v">Changes fast, even in summer. Bring layers, waterproofs &amp; sturdy shoes. Check <a href="https://en.vedur.is/">vedur.is</a> and <a href="https://www.road.is/">road.is</a>.</div></div>
-    <div class="row"><div class="k">Money</div><div class="v">Cards work everywhere — you rarely need cash.</div></div>
+    <h2>Good to know on set</h2>
+    <div class="row" style="border-color:#f0f0ee;"><div class="k" style="color:var(--muted);">Call times</div><div class="v">Week 1 working time 06:30–18:30 · Week 2 (Djúpivogur) 14:00–02:00. Watch for the daily call sheet.</div></div>
+    <div class="row" style="border-color:#f0f0ee;"><div class="k" style="color:var(--muted);">Weather</div><div class="v">Changes fast even in summer — bring layers, waterproofs &amp; sturdy shoes. Check <a href="https://en.vedur.is/">vedur.is</a> &amp; <a href="https://www.road.is/">road.is</a>.</div></div>
+    <div class="row" style="border-color:#f0f0ee;"><div class="k" style="color:var(--muted);">Getting around</div><div class="v">Höfn is small &amp; walkable. Reykjavík is ~460 km / 6 h west — plan drives with daylight &amp; weather in mind.</div></div>
   </div>
 
-  <div class="note">Hours &amp; numbers were correct at time of writing (July 2026) but can change — when in doubt, call ahead or ask at Nettó / Gamlabúð.</div>
+  <div class="note">Hours &amp; numbers were correct at time of writing (July 2026) but can change — call ahead or ask at Nettó / Gamlabúð if unsure.</div>
 
   <div class="footer">
     <div class="n">Margrét Einarsdóttir</div>
-    <div class="r">Junior Producer · STILL VIVID</div>
+    <div class="r">Coordinator · STILL VIVID</div>
     <div class="c">Gufunesvegur 17 · 112 RVK · Iceland<br>+354 615 9920 · margret@stillvivid.is</div>
   </div>
 
 </div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+  var streets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {maxZoom:19, attribution:'© OpenStreetMap'});
+  var sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    {maxZoom:19, attribution:'© Esri'});
+
+  var map = L.map('map', {layers:[streets], scrollWheelZoom:false}).setView([64.2530, -15.2080], 13);
+  L.control.layers({'Map':streets,'Satellite':sat}).addTo(map);
+
+  var C={base:'#c9a24b', shoot:'#c0392b', ess:'#2d6cdf', food:'#16181d', sight:'#2e8b57'};
+  function pin(lat,lng,cat,name,desc,q,url){
+    var m=L.circleMarker([lat,lng],{radius:8,color:'#fff',weight:2,fillColor:C[cat],fillOpacity:1});
+    var d=url?url:'https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(q);
+    m.bindPopup('<b>'+name+'</b><br>'+desc+'<br><a href="'+d+'" target="_blank">Directions ›</a>');
+    m.addTo(map); return m;
+  }
+  var pts=[
+    [64.2571,-15.2140,'base','Production base','Álaleira 5, Höfn','Álaleira 5, 780 Höfn, Iceland'],
+    [64.2510,-15.2090,'ess','Sundlaug Hafnar','Swimming pool · Víkurbraut','Sundlaug Hafnar, Höfn, Iceland'],
+    [64.2564,-15.2168,'ess','Nettó & Lyfja','Supermarket + pharmacy · Litlabrú 1','Nettó, Litlabrú 1, Höfn, Iceland'],
+    [64.2516,-15.2098,'ess','HSU Höfn','Health centre · Víkurbraut 31','Heilsugæsla Höfn, Víkurbraut 31, Iceland'],
+    [64.2489,-15.1978,'food','Pakkhús','Harbour restaurant · langoustine','Pakkhús, Höfn, Iceland'],
+    [64.2519,-15.2050,'food','Kaffi Hornið','Central restaurant since 1999','Kaffi Hornið, Höfn, Iceland'],
+    [64.2528,-15.2107,'food','Ósinn / Hótel Höfn','Restaurant · local fish','Hótel Höfn, Iceland'],
+    [64.2496,-15.1990,'food','Íshúsið Pizzeria','Stone-baked pizza · harbour','Íshúsið Pizzeria, Höfn, Iceland'],
+    [64.2500,-15.2008,'food','Hafnarbúðin','Diner · burgers, late hours','Hafnarbúðin, Höfn, Iceland'],
+    [64.2482,-15.1968,'sight','Gamlabúð','Vatnajökull NP visitor centre','Gamlabúð, Höfn, Iceland'],
+    [64.2440,-15.1930,'sight','Ósland','Coastal walk · birdlife','Ósland, Höfn, Iceland'],
+    [64.2453,-14.9975,'sight','Stokksnes / Vestrahorn','Photo spot · ~15 min','Stokksnes, Iceland'],
+    [64.0784,-16.2290,'sight','Jökulsárlón','Glacier lagoon · ~1 h','Jökulsárlón, Iceland'],
+    [64.0357,-16.1907,'sight','Þórbergssetur','Museum & café · ~30 min','Þórbergssetur, Iceland'],
+    [64.6549,-14.2795,'shoot','Djúpivogur','Town near the raft shoot · ~1 h','Djúpivogur, Iceland'],
+    [64.261843,-14.967475,'shoot','★ Shoot location','Our main shoot location — tap Directions','','https://www.google.com/maps/dir/?api=1&destination=64.261843,-14.967475']
+  ];
+  pts.forEach(function(p){pin(p[0],p[1],p[2],p[3],p[4],p[5],p[6]);});
+</script>
 </body>
 </html>
